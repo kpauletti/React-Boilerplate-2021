@@ -1,22 +1,22 @@
 import DefaultLayout from '@@/Default';
-import AuthLayout from '@@/Auth';
 import NotFound from '@@/404';
-import Queries from '@/Queries';
-import LoginForm from '@/LoginForm';
+import Home from '@/Home';
+import Login from '~/Login';
+
 export const routes = [
     {
         path: '/',
-        auth: true,
-        component: Queries,
+        auth: false,
+        component: Home,
         exact: true,
         layout: DefaultLayout
     },
     {
         path: '/login',
         auth: false,
-        component: LoginForm,
+        component: Login,
         exact: true,
-        layout: AuthLayout
+        layout: DefaultLayout
     },
     {
         path: '*',

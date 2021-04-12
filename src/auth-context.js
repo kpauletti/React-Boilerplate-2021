@@ -1,29 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import * as auth from './auth-provider';
-import { addAuthorization } from '#/api';
+import firebase from 'firebase/app'
 
 const AuthContext = React.createContext();
 
 export const AuthProvider = props => {
     const [token, setToken] = useState();
 
-    const authToken = auth.getToken();
+    firebase.auth().onAuthStateChanged((user) => {
 
-    useEffect(() => {
-        if (authToken) {
-            addAuthorization(authToken);
-            setToken(authToken);
+        if(user?.uid) {
+            setToken(user.uid)
+            return
         }
-    }, [authToken]);
 
-    const login = payload => auth.login(payload).then(user => setToken(user.authorization));
+        setToken(null)
+
+      });
+
+
+    const login = async payload => {
+        const user = await auth.login(payload);
+        setToken(user?.uid)
+    }
 
     const logout = () => {
         auth.logout();
         setToken(null);
     };
 
-    const contextValue = { login, logout, token };
+    const register = async payload => {
+
+        await auth.register(payload);
+    }
+
+    const contextValue = { login, logout, register, token };
 
     return <AuthContext.Provider value={contextValue} {...props} />;
 };

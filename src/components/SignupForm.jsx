@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     }
 });
 
-const LoginForm = props => {
+const SignupForm = props => {
     const { onSubmit } = props;
     const { button } = useStyles();
     return (
@@ -29,8 +29,12 @@ const LoginForm = props => {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Button className={button} fullWidth color='secondary' variant='contained' onClick={handleSubmit}>
-                            LOGIN
+                        <TextInput name='password_confirmation' label='Confirm Password' inputProps={{ type: 'password' }} />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Button className={button} color='secondary' fullWidth variant='contained' onClick={handleSubmit}>
+                            SIGNUP
                         </Button>
                     </Grid>
                 </Grid>
@@ -50,7 +54,17 @@ const validate = values => {
         errors.password = 'Required';
     }
 
+    if (!values.password_confirmation) {
+        errors.password_confirmation = 'Required';
+    }
+
+    if (values.password && values.password_confirmation) {
+        if (values.password !== values.password_confirmation) {
+            errors.password_confirmation = '*Passwords do not match. Please try again';
+        }
+    }
+
     return errors;
 };
 
-export default LoginForm;
+export default SignupForm;
